@@ -1,0 +1,24 @@
+{
+  "name": "js2d",
+  "version": "0.1.0",
+  "description": "A dependency free library to make it simple to convert complex objects into easy to manipulate 2d arrays. This library is good for handling objects like those returned from the AWS SDK.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node ./node_modules/mocha/bin/mocha"
+  },
+  "keywords": [
+    "AWS",
+    "SDK",
+    "JSON",
+    "jq",
+    "jmespath"
+  ],
+  "author": "Michael Connor",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^10.0.0"
+  }
+}
