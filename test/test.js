@@ -50,5 +50,29 @@ describe('js2d', () => {
       var result = js2d.make2d(columnsObject, obj)
       assert.deepEqual(result.slice(0,4), firstFourObjRows)
     })
+  }),
+  describe('#make2d(obj) array root', ()=> {
+    it('should handle an array at the root', ()=> {
+      var obj = [
+        {"fname":"Michael","lname":"Connor","address":[
+          {"type":"home","addrLine1":"123 Main St","city":"Atlanta","state":"GA"},
+          {"type":"work","addrLine1":"321 Peachtree Rd NE","city":"Atlanta","state":"GA"}
+        ]},
+        {"fname":"Lawrence","lname":"Michael"},
+        {"fname":"Bill","lname":"Smith","address":[
+          {"type":"home","addrLine1":"876 20th St","city":"Atlanta","state":"GA"}
+        ]}
+      ]
+      var expected = [["Michael","Connor","home","123 Main St","Atlanta","GA"],["Michael","Connor","work","321 Peachtree Rd NE","Atlanta","GA"],["Bill","Smith","home","876 20th St","Atlanta","GA"]]
+      var result = js2d.make2d(["*.fname","*.lname","*.address.*.type","*.address.*.addrLine1","*.address.*.city","*.address.*.state"], obj)
+      assert.deepEqual(result, expected)
+    })
+  }),
+  describe('#make2d(string)', ()=> {
+    it('should handle a string spec for columns', ()=> {
+      var result = js2d.make2d(columns.join("|"), obj)
+      assert.deepEqual(result.slice(0,4), firstFourRows)
+    })
   })
+
 })
