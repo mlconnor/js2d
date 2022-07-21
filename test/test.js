@@ -6,16 +6,16 @@ import('mocha')
 const obj = JSON.parse(fs.readFileSync('./test/awsrek_sample.json', { encoding: 'utf8' }))
 
 const columns = [
-  "VideoMetadata/Codec",
-  "VideoMetadata/FrameHeight",
-  "VideoMetadata/FrameWidth",
-  "Labels/*/Timestamp",
-  "Labels/*/Label/Name",
-  "Labels/*/Label/Confidence",
-  "Labels/*/Label/Instances/*/BoundingBox/Width",
-  "Labels/*/Label/Instances/*/BoundingBox/Height",
-  "Labels/*/Label/Instances/*/BoundingBox/Top",
-  "Labels/*/Label/Instances/*/BoundingBox/Left"
+  "VideoMetadata.Codec",
+  "VideoMetadata.FrameHeight",
+  "VideoMetadata.FrameWidth",
+  "Labels.*.Timestamp",
+  "Labels.*.Label.Name",
+  "Labels.*.Label.Confidence",
+  "Labels.*.Label.Instances.*.BoundingBox.Width",
+  "Labels.*.Label.Instances.*.BoundingBox.Height",
+  "Labels.*.Label.Instances.*.BoundingBox.Top",
+  "Labels.*.Label.Instances.*.BoundingBox.Left"
 ]
 
 const firstFourRows = [["h264",360,640,0,"Boat",59.81174087524414,0.16477584838867188,0.18891093134880066,0.807238757610321,0.3536725640296936],["h264",360,640,0,"Bus",93.9477767944336,0.19102247059345245,0.1379556506872177,0.4492671489715576,0.010075467638671398],["h264",360,640,0,"Bus",93.9477767944336,0.12909945845603943,0.21337026357650757,0.515156626701355,0.7728689312934875],["h264",360,640,0,"Car",95.27998352050781,0.1210596114397049,0.18334537744522095,0.8137429356575012,0.5639166831970215]]
@@ -52,7 +52,7 @@ describe('js2d', () => {
   describe('#make2d(obj)', ()=> {
     it('columns as object should return an array of arrays with expected values', ()=> {
       var columnsObject = {}
-      columns.forEach(v => columnsObject[v.split("/").pop()] = v)
+      columns.forEach(v => columnsObject[v.split(".").pop()] = v)
       var result = js2d.make2d(columnsObject, obj)
       assert.deepEqual(result.slice(0,4), firstFourObjRows)
     })
@@ -71,12 +71,12 @@ describe('js2d', () => {
       ]
       var expected = [["Michael","Connor","home","123 Main St","Atlanta","GA"],["Michael","Connor","work","321 Peachtree Rd NE","Atlanta","GA"],["Bill","Smith","home","876 20th St","Atlanta","GA"]]
       var columns = [
-        "*/fname",
-        "*/lname",
-        "*/address/*/type",
-        "*/address/*/addrLine1",
-        "*/address/*/city",
-        "*/address/*/state"
+        "*.fname",
+        "*.lname",
+        "*.address.*.type",
+        "*.address.*.addrLine1",
+        "*.address.*.city",
+        "*.address.*.state"
       ]
       var result = js2d.make2d(columns, obj)
       assert.deepEqual(result, expected)

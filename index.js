@@ -233,7 +233,7 @@ function nestedIterator(parent, path, filter) {
 const starFilter = ()=> { return true }
 
 function buildFilter(definition) {
-  log("building filter")
+  log("building filter", definition)
   if ( definition == '*') {
     return starFilter
   }
@@ -315,13 +315,16 @@ function getValue(pathEls, obj) {
   //log('getVal', pathEls, obj)
   for ( var pathElIndex = 0; pathElIndex < pathEls.length; pathElIndex++ ) {
     var pathEl = pathEls[pathElIndex]
-    var indexBy = null
-    var colonIndex = pathEl.indexOf(":")
-    if ( colonIndex > 0 ) {
-      indexBy = pathEl.substring(colonIndex + 1)
-      pathEl = pathEl.substring(0, colonIndex)
-      log("map for " + pathEls[pathElIndex], colonIndex, indexBy, pathEls)
+    var match = pathEl.match(/([^$\{]+)(?:{(.+)})?/)
+
+    if ( ( ! match ) || ( ! match[0]) ) {
+      log("warning: compilation issue for getValue(), columndef=" + pathEls[pathElIndex] + " from " + pathEls.join())
+      return undefined
     }
+
+    var pathEl = match[1]
+    var indexBy = match[2]
+
     log("pathEl", pathEl, "indexBy", indexBy)
     //log("pathEl", pathEl, JSON.stringify(current).substring(0,100) + "isArray", Array.isArray(current))
     if ( Array.isArray(current) ) {
@@ -378,7 +381,7 @@ function getValue(pathEls, obj) {
  * would be ?
  */
 function splitIterators(str) {
-  var splits = str.split('/')
+  var splits = str.split('.')
   var trailing = []
   var finalSplits = []
   //log("split str", splits)

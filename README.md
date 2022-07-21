@@ -19,14 +19,15 @@ var columns = [
   "VideoMetadata.Codec",
   "VideoMetadata.FrameHeight",
   "VideoMetadata.FrameWidth",
-  "Labels/*/Timestamp",
-  "Labels/*/Label/Name",
-  "Labels/*/Label/Confidence",
-  "Labels/*/Label/Instances/*/BoundingBox/Width",
-  "Labels/*/Label/Instances/*/BoundingBox/Height",
-  "Labels/*/Label/Instances/*/BoundingBox/Top",
-  "Labels/*/Label/Instances/*/BoundingBox/Left",
+  "Labels.*.Timestamp",
+  "Labels.*.Label.Name",
+  "Labels.*.Label.Confidence",
+  "Labels.*.Label.Instances.*.BoundingBox.Width",
+  "Labels.*.Label.Instances.*.BoundingBox.Height",
+  "Labels.*.Label.Instances.*.BoundingBox.Top",
+  "Labels.*.Label.Instances.*.BoundingBox.Left"
 ]
+
 var complexObject = {
     "JobStatus": "SUCCEEDED",
     "VideoMetadata": {
@@ -145,16 +146,16 @@ The previous example gives you back a 2d array. In the event that you need named
 
 ````
 var columns = {
-  Codec: 'VideoMetadata/Codec',
-  FrameHeight: 'VideoMetadata/FrameHeight',
-  FrameWidth: 'VideoMetadata/FrameWidth',
-  Timestamp: 'Labels/*/Timestamp',
-  Name: 'Labels/*/Label/Name',
-  Confidence: 'Labels/*/Label/Confidence',
-  Width: 'Labels/*/Label/Instances/*/BoundingBox/Width',
-  Height: 'Labels/*/Label/Instances/*/BoundingBox/Height',
-  Top: 'Labels/*/Label/Instances/*/BoundingBox/Top',
-  Left: 'Labels/*/Label/Instances/*/BoundingBox/Left'
+  Codec:       'VideoMetadata.Codec',
+  FrameHeight: 'VideoMetadata.FrameHeight',
+  FrameWidth:  'VideoMetadata.FrameWidth',
+  Timestamp:   'Labels.*.Timestamp',
+  Name:        'Labels.*.Label.Name',
+  Confidence:  'Labels.*.Label.Confidence',
+  Width:       'Labels.*.Label.Instances.*.BoundingBox.Width',
+  Height:      'Labels.*.Label.Instances.*.BoundingBox.Height',
+  Top:         'Labels.*.Label.Instances.*.BoundingBox.Top',
+  Left:        'Labels.*.Label.Instances.*.BoundingBox.Left'
 }
 
 var results = js2d.make2d(columns, complexObj)
@@ -182,22 +183,22 @@ When I first found jmespath I got really excited. It's much simpler that jq but 
 The philosophy behind js2d is that instead of you trying to figure out how to process a complex document, you should just tell the library what you want and let it figure out how to deliver it to you. So with that in mind, you pass in an array of columns that you want in the results and the library figures out how to deliver that to you. Let's take another look at the example we used above and how we defined the columns.
 ````
 var columns = [
-  "VideoMetadata/Codec",
-  "VideoMetadata/FrameHeight",
-  "VideoMetadata/FrameWidth",
-  "Labels/*/Timestamp",
-  "Labels/*/Label/Name",
-  "Labels/*/Label/Confidence",
-  "Labels/*/Label/Instances/*/BoundingBox/Width",
-  "Labels/*/Label/Instances/*/BoundingBox/Height",
-  "Labels/*/Label/Instances/*/BoundingBox/Top",
-  "Labels/*/Label/Instances/*/BoundingBox/Left"
+  "VideoMetadata.Codec",
+  "VideoMetadata.FrameHeight",
+  "VideoMetadata.FrameWidth",
+  "Labels.*.Timestamp",
+  "Labels.*.Label.Name",
+  "Labels.*.Label.Confidence",
+  "Labels.*.Label.Instances.*.BoundingBox.Width",
+  "Labels.*.Label.Instances.*.BoundingBox.Height",
+  "Labels.*.Label.Instances.*.BoundingBox.Top",
+  "Labels.*.Label.Instances.*.BoundingBox.Left"
 ]
 ````
 What we are really asking for here is a list of the properties from the Label Instances (e.g. Width, Height). Along the way, there are certain properties that we also need such as Label Confidence etc. So we specify that we want items in the collection by use of *. The column definition below is saying that we want to go into the Labels array, get all Labels (*), then go into the Instance array, find all of those (*), go into the BoundingBox and get the Height property.
 
 ````
-Labels/*/Label/Instances/*/BoundingBox/Height
+Labels.*.Label.Instances.*.BoundingBox.Height
 ````
 The first three columns(e.g. VideoMetadata/Codec) are off the root of the document and aren't part of any collection. Because of that, you just use dotted notation to tell js2d what you want.
 
